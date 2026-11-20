@@ -1,0 +1,53 @@
+name: Four departments biweekly report build
+on:
+  workflow_dispatch:
+    inputs:
+      collection_date:
+        description: 'YYYY-MM-DD (date of browser export)'
+        required: true
+        type: string
+  schedule:
+    - cron: '20 9 * * 1'
+permissions:
+  contents: write
+concurrency:
+  group: four-departments-biweekly
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check collection and run reports
+        env:
+          INPUT_DATE: ${{ inputs.collection_date }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "schedule" ]; then
+            # Even ISO weeks only. Schedule checks for already-uploaded, dated data.
+            WEEK=$(date -u +%V)
+            if [ $((10#$WEEK % 2)) -ne 0 ]; then echo 'Off-week; skip'; exit 0; fi
+            DAY=$(date -u +%F)
+          else
+            DAY="$INPUT_DATE"
+          fi
+          if [ ! -d "incoming/$DAY" ]; then
+            echo "No browser-exported data for $DAY. No report published."
+            exit 0
+          fi
+          python scripts/build_four_reports.py --date "$DAY"
+      - name: Commit generated reports if any
+        run: |
+          set -euo pipefail
+          git add reports/dept-18 reports/dept-38 reports/dept-46 reports/dept-328
+          if git diff --cached --quiet; then echo 'No changes'; exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Update four department reports from verified browser exports'
+          git push
