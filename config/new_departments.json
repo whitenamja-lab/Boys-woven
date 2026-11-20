@@ -1,0 +1,25 @@
+
+{
+  "departments": [
+    {
+      "id": "46",
+      "name": "Department 46",
+      "report_path": "reports/dept-46"
+    },
+    {
+      "id": "18",
+      "name": "Department 18",
+      "report_path": "reports/dept-18"
+    },
+    {
+      "id": "38",
+      "name": "Department 38",
+      "report_path": "reports/dept-38"
+    },
+    {
+      "id": "328",
+      "name": "Department 328",
+      "report_path": "reports/dept-328"
+    }
+  ]
+}
