@@ -1,0 +1,62 @@
+name: Sync legacy reports from upstream
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '45 10 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream-legacy-reports
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          path: fork
+          persist-credentials: true
+
+      - name: Checkout original upstream
+        uses: actions/checkout@v4
+        with:
+          repository: Bailey-Yoon/Bigkids-Knit
+          ref: main
+          path: upstream
+          persist-credentials: false
+
+      - name: Copy only four legacy report directories
+        shell: bash
+        run: |
+          set -euo pipefail
+          for dept in bigboys biggirls toddlerboys toddlergirls; do
+            src="upstream/reports/$dept"
+            dst="fork/reports/$dept"
+            if [ ! -d "$src" ]; then
+              echo "ERROR: Upstream directory missing: $src"
+              exit 1
+            fi
+            mkdir -p "$dst"
+            # Copy new/changed files, but NEVER delete fork files.
+            rsync -a --exclude='.git/' "$src/" "$dst/"
+          done
+
+      - name: Commit only synchronized legacy reports
+        working-directory: fork
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- reports/bigboys reports/biggirls reports/toddlerboys reports/toddlergirls
+          if git diff --cached --quiet; then
+            echo 'No legacy report changes.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Sync four legacy reports from upstream'
+          git push
