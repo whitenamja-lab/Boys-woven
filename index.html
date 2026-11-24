@@ -211,7 +211,7 @@ a.card .rvb.no{background:#f4f3f6;color:var(--muted)}
 <div class="cols">
 <div class="main">
 
-<div class="sec s-track">
+<div class="sec s-track"><!-- catalog-excel-export --><div style="padding:12px;margin:8px 0;background:#e8f4ed;border-radius:8px"><a id="catalog-excel-latest" href="exports/">📊 전체 8개 Department Excel 다운로드</a> · <a href="exports/">부서별 / 과거 회차</a></div><script>fetch("exports/latest.json").then(r=>r.json()).then(d=>document.getElementById("catalog-excel-latest").href="exports/"+d.path).catch(()=>{});</script>
   <div class="lbl">
     <div class="n">격주 트래킹</div>
     <div class="c">2주 단위 자동 수집</div>
