@@ -20,7 +20,7 @@ jobs:
       - run: pip install openpyxl Pillow
       - run: python scripts/build_excel_exports.py
       - run: |
-          git add -- exports index.html
+         git add -- exports index.html reports/dept-18/index.html reports/dept-46/index.html reports/dept-38/index.html reports/dept-328/index.html
           if git diff --cached --quiet; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
