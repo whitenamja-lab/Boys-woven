@@ -12,6 +12,25 @@ td img.p{width:72px;height:72px;object-fit:cover;border-radius:4px;background:#e
 <div class="nav"><a href="../../">📊 Big Kids Hub</a></div>
 <div class="sub">TARGET.COM · 격주 트래킹 · 기준선(Round 1)</div>
 <h1>Department 46 · Boys’ Bottoms</h1>
+  <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid #ddd;border-radius:10px;padding:12px;margin:12px 0;gap:12px">
+  <div>
+    <b>📊 카탈로그 엑셀</b>
+    <div style="font-size:12px;color:#666">
+      상품 사진 · 상세 정보 · Colorways 포함
+    </div>
+  </div>
+  <a id="dept-excel" href="../../exports/" style="background:#1565c0;color:white;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:bold">
+    ⬇ 내려받기
+  </a>
+</div>
+<script>
+fetch('../../exports/latest.json',{cache:'no-store'})
+  .then(r=>r.json())
+  .then(d=>{
+    document.getElementById('dept-excel').href =
+      '../../exports/'+d.path.replace('All_Departments.xlsx','D46.xlsx');
+  });
+</script>
 <div class="sub">그리드 수집 2026-11-20 · <a href="https://www.target.com/c/bottoms-boys-clothing-kids/-/N-5xty0" target="_blank">카테고리 그리드</a> 전수 629/629건 → PDP DPCI 앞자리 <b>046</b>만 남김</div>
 <div class="kpis"><div class="k"><b>49</b><span>카탈로그 품목</span></div><div class="k"><b>143</b><span>컬러웨이</span></div>
 <div class="k"><b>$18.00</b><span>중간 가격</span></div><div class="k"><b>580</b><span>그리드 내 타 부서·외부 브랜드</span></div></div>
