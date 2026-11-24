@@ -1,4 +1,4 @@
-name: Build catalog Excel exports
+name: Catalog Excel Export
 on:
   workflow_dispatch:
   schedule:
